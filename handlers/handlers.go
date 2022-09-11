@@ -3,11 +3,14 @@ package handlers
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 )
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Hello, world!\n")
+	log.Println(r.Method)
+
 }
 
 func PostArticleHandler(w http.ResponseWriter, r *http.Request) {
