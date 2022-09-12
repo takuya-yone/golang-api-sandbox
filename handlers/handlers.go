@@ -5,18 +5,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
-		io.WriteString(w, "Hello, world!\n")
-
-	} else {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
-
-	log.Println(r.Method)
+	io.WriteString(w, "Hello, world!\n")
 
 }
 
@@ -25,13 +21,37 @@ func PostArticleHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ArticleListHandler(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Article List\n")
+	queryMap := r.URL.Query()
+	var page int
+
+	if p, ok := queryMap["page"]; ok && len(p) > 0 {
+		var err error
+		page, err = strconv.Atoi(p[0])
+		log.Println(err)
+		if err != nil {
+			http.Error(w, "Invasssslid query parameter", http.StatusBadRequest)
+			return
+		}
+	} else {
+		page = 1
+	}
+
+	reqString := fmt.Sprintf("Article List (page %d)\n", page)
+	io.WriteString(w, reqString)
 }
 
 func ArticleDetailHandler(w http.ResponseWriter, r *http.Request) {
-	articleID := 1
+	articleID, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		http.Error(w, "Invalid query parameter", http.StatusBadRequest)
+		return
+	}
 	reqString := fmt.Sprintf("Article No.%d\n", articleID)
 	io.WriteString(w, reqString)
+
+	// articleID := 1
+	// reqString := fmt.Sprintf("Article No.%d\n", articleID)
+	// io.WriteString(w, reqString)
 }
 
 func PostNiceHandler(w http.ResponseWriter, r *http.Request) {
