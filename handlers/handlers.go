@@ -12,6 +12,12 @@ import (
 	"github.com/takuya-yone/golang-api-sandbox/models"
 )
 
+func HealthHandler(w http.ResponseWriter, r *http.Request) {
+
+	io.WriteString(w, "Health Check, OK!\n")
+
+}
+
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 
 	io.WriteString(w, "Hello, world!\n")

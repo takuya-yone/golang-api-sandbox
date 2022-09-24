@@ -12,6 +12,7 @@ func main() {
 
 	r := mux.NewRouter()
 
+	r.HandleFunc("/health", handlers.HealthHandler).Methods(http.MethodGet)
 	r.HandleFunc("/hello", handlers.HelloHandler).Methods(http.MethodGet)
 	r.HandleFunc("/article", handlers.PostArticleHandler).Methods(http.MethodPost)
 	r.HandleFunc("/article/list", handlers.ArticleListHandler).Methods(http.MethodGet)
