@@ -6,7 +6,7 @@ RUN go build main.go
 
 FROM alpine:latest
 RUN apk update
-RUN apk add curl
+RUN apk add curl --no-cache
 COPY --from=builder /work/main .
 EXPOSE 8080
 ENTRYPOINT ./main
