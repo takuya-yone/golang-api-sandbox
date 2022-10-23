@@ -1,8 +1,42 @@
 version: '3'
 services:
-  golang:
-    image: takuyayone/golang-api-sandbox:1.0.0
-    platform: linux/amd64
-    build: ./
+  # golang:
+  #   image: takuyayone/golang-api-sandbox:1.0.0
+  #   platform: linux/amd64
+  #   build: ./
+  #   ports:
+  #     - '8080:8080'
+
+  adminer:
+    image: adminer
+    restart: always
     ports:
-      - '8080:8080'
+      - 8080:8080
+    environment:
+      # ADMINER_DEFAULT_DB_HOST: mysqldb
+      ADMINER_DEFAULT_SERVER: mysql
+      ADMINER_DEFAULT_DB_NAME: sampledb
+
+
+  mysql:
+    build: ./mysql/
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      # - --sql-mode=ONLY_FULL_GROUP_BY,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    environment:
+      MYSQL_ROOT_USER: root # MySQLのルートユーザー名
+      MYSQL_ROOT_PASSWORD: pass # MySQLのルートユーザーのパスワード
+      MYSQL_DATABASE: sampledb # MySQLに用意されている初期データベースの名前
+      MYSQL_USER: docker # MySQLのユーザー名
+      MYSQL_PASSWORD: docker # MySQLのユーザーパスワード
+      TZ: 'Asia/Tokyo'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/initdb.d/:/docker-entrypoint-initdb.d
+#     volumes:
+#       - db-volume:/var/lib/mysql
+#     # ボリュームの作成 
+# volumes:
+#   db-volume:
