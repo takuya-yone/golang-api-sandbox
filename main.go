@@ -6,9 +6,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/takuya-yone/golang-api-sandbox/handlers"
+	"github.com/takuya-yone/golang-api-sandbox/sandbox"
 )
 
 func main() {
+
+	sandbox.DB_conn()
 
 	r := mux.NewRouter()
 

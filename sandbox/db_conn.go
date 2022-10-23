@@ -1,4 +1,4 @@
-package main
+package sandbox
 
 import (
 	"database/sql"
@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func main() {
+func DB_conn() {
 	dbUser := "docker"
 	dbPassword := "docker"
 	dbDatabase := "sampledb"
