@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/takuya-yone/golang-api-sandbox/models"
 )
 
 func DB_conn() {
@@ -20,10 +21,37 @@ func DB_conn() {
 	}
 	defer db.Close()
 
-	if err := db.Ping(); err != nil {
+	const sqlStr = `
+	select title, contents,username,nice from articles;
+	`
+
+	rows, err := db.Query(sqlStr)
+
+	if err != nil {
 		fmt.Println(err)
-	} else {
-		fmt.Println("connect to DB")
+		return
 	}
+
+	defer rows.Close()
+
+	articleArray := make([]models.Article, 0)
+	for rows.Next() {
+		var article models.Article
+		err := rows.Scan(&article.Title, &article.Contents, &article.UserName, &article.NiceNum)
+
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			articleArray = append(articleArray, article)
+		}
+	}
+
+	fmt.Printf("%+v\n", articleArray)
+
+	// if err := db.Ping(); err != nil {
+	// 	fmt.Println(err)
+	// } else {
+	// 	fmt.Println("connect to DB")
+	// }
 
 }
