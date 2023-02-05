@@ -1,11 +1,11 @@
 version: '3'
 services:
-  # golang:
-  #   image: takuyayone/golang-api-sandbox:1.0.0
-  #   platform: linux/amd64
-  #   build: ./
-  #   ports:
-  #     - '8080:8080'
+  golang:
+    image: takuyayone/golang-api-sandbox:1.0.0
+    platform: linux/amd64
+    build: ./
+    ports:
+      - '8080:8080'
 
   adminer:
     image: adminer
