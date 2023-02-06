@@ -21,37 +21,60 @@ func DB_conn() {
 	}
 	defer db.Close()
 
+	// rows, err := db.Query(sqlStr, articleID)
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	// defer rows.Close()
+
+	// articleArray := make([]models.Article, 0)
+
+	// for rows.Next() {
+	// 	var article models.Article
+	// 	var createdTime sql.NullTime
+	// 	err := rows.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
+
+	// 	if createdTime.Valid {
+	// 		article.CreatedAt = createdTime.Time
+	// 	}
+
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		articleArray = append(articleArray, article)
+	// 	}
+	// }
+	// fmt.Printf("%+v\n", articleArray)
+
+	articleID := 1
 	const sqlStr = `
-	select * from articles;
+	select * from articles
+	where article_id = ?;
 	`
 
-	rows, err := db.Query(sqlStr)
+	row := db.QueryRow(sqlStr, articleID)
 
-	if err != nil {
+	if err := row.Err(); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	defer rows.Close()
+	var article models.Article
+	var createdTime sql.NullTime
 
-	articleArray := make([]models.Article, 0)
-	for rows.Next() {
-		var article models.Article
-		var createdTime sql.NullTime
-		err := rows.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
-
-		if createdTime.Valid {
-			article.CreatedAt = createdTime.Time
-		}
-
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			articleArray = append(articleArray, article)
-		}
+	// for row.Next() {
+	err = row.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
+	if createdTime.Valid {
+		article.CreatedAt = createdTime.Time
 	}
-
-	fmt.Printf("%+v\n", articleArray)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// }
+	fmt.Printf("%+v\n", article)
 
 	// if err := db.Ping(); err != nil {
 	// 	fmt.Println(err)
