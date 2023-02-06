@@ -21,6 +21,7 @@ func DB_conn() {
 	}
 	defer db.Close()
 
+	/////////////////////////////////////////////////////////////
 	// rows, err := db.Query(sqlStr, articleID)
 
 	// if err != nil {
@@ -48,38 +49,47 @@ func DB_conn() {
 	// 	}
 	// }
 	// fmt.Printf("%+v\n", articleArray)
+	/////////////////////////////////////////////////////////////
+	// articleID := 1
+	// const sqlStr = `
+	// select * from articles
+	// where article_id = ?;
+	// `
 
-	articleID := 1
+	// row := db.QueryRow(sqlStr, articleID)
+
+	// if err := row.Err(); err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	// var article models.Article
+	// var createdTime sql.NullTime
+
+	// err = row.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
+	// if createdTime.Valid {
+	// 	article.CreatedAt = createdTime.Time
+	// }
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// fmt.Printf("%+v\n", article)
+	/////////////////////////////////////////////////////////////
+	article := models.Article{
+		Title:    "insert test",
+		Contents: "Can in Insert data correctly?",
+		UserName: "yone",
+	}
 	const sqlStr = `
-	select * from articles
-	where article_id = ?;
+	insert into articles(title,contents,username,nice,created_at)values(?,?,?,0,now());
 	`
-
-	row := db.QueryRow(sqlStr, articleID)
-
-	if err := row.Err(); err != nil {
+	result, err := db.Exec(sqlStr, article.Title, article.Contents, article.UserName)
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	var article models.Article
-	var createdTime sql.NullTime
-
-	// for row.Next() {
-	err = row.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
-	if createdTime.Valid {
-		article.CreatedAt = createdTime.Time
-	}
-	if err != nil {
-		fmt.Println(err)
-	}
-	// }
-	fmt.Printf("%+v\n", article)
-
-	// if err := db.Ping(); err != nil {
-	// 	fmt.Println(err)
-	// } else {
-	// 	fmt.Println("connect to DB")
-	// }
+	fmt.Println(result.LastInsertId())
+	fmt.Println(result.RowsAffected())
 
 }
